@@ -15,7 +15,7 @@ charset = utf-8
 [*.html]
 indent_size = 2
 
-[*.js]
+[{*.js, *.jsx}]
 indent_size = 2
 # editorconfig-tools is unable to ignore longs strings or urls
 max_line_length = off
