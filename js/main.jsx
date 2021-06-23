@@ -2,6 +2,38 @@ function Welcome(props) {
   return <h1>Здравствуй, {props.name}.</h1>;
 }
 
+class Clock extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {date: new Date()};
+  }
+
+  componentDidMount() {
+    this.timerID = setInterval(
+      () => this.tick(),
+      1000
+    );
+  }
+
+  tick() {
+    this.setState({
+      date: new Date()
+    });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timerID);
+  }
+
+  render() {
+    return (
+      <div>
+        <h2>Сейчас {this.state.date.toLocaleTimeString()}.</h2>
+      </div>
+    );
+  }
+}
+
 function Avatar(props) {
   return (
     <div className="flex-shrink-0">
@@ -17,7 +49,7 @@ function Comment(props) {
       <div className="flex-grow-1 ms-3">
         {props.text}
         <div>
-          <i>{props.date.toISOString()}</i>
+          <i>{props.date.toLocaleTimeString()}</i>
         </div>
       </div>
     </div>
@@ -36,6 +68,7 @@ function App() {
   return (
     <div>
       <Welcome name="Алиса" />
+      <Clock />
       <Comment
         date={comment.date}
         text={comment.text}
