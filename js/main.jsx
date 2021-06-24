@@ -64,7 +64,7 @@ const questions = [
 function Answer(props) {
   // TODO: change button colors
   return (
-    <div className="my-1">
+    <div className="col-lg-4 col-md-6 col-sm-12 p-2">
       <button className="btn btn-secondary"
               disabled={!props.questionsEnabled}
               onClick={() => {props.onAnswerSelected(props.answer.id)}}>{props.answer.text}</button>
@@ -155,7 +155,7 @@ class QuizApp extends React.Component {
             <div className="p-3 mb-2 bg-light">{this.state.question.text}</div>
           </div>
         </div>
-        <div>{this.state.question.answers.map((answer) =>
+        <div class="d-flex flex-wrap align-content-between">{this.state.question.answers.map((answer) =>
             <Answer answer={answer}
                     questionsEnabled={this.state.questionsEnabled}
                     onAnswerSelected={this.onAnswerSelected} key={answer.id} />)}</div>
