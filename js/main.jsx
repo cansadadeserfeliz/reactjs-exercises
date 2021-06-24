@@ -62,9 +62,10 @@ const questions = [
 ];
 
 function Answer(props) {
+  // TODO: change button colors
   return (
     <div className="my-1">
-      <button className="btn-secondary"
+      <button className="btn btn-secondary"
               disabled={!props.questionsEnabled}
               onClick={() => {props.onAnswerSelected(props.answer.id)}}>{props.answer.text}</button>
     </div>
@@ -74,7 +75,7 @@ function Answer(props) {
 function Continue(props) {
   return (
     <div>
-      <button className="btn-primary">Next</button>
+      <button disabled={props.questionsEnabled} className="btn btn-primary">Next</button>
     </div>
   );
 }
@@ -84,11 +85,44 @@ class QuizApp extends React.Component {
     super(props);
     this.onAnswerSelected = this.onAnswerSelected.bind(this);
     this.state = {
+      error: null,
       correctAnswersCount: 0,
       answersCount: 0,
-      question: questions[0],
+      question: null,
       questionsEnabled: true,
     };
+  }
+
+  getQuestion() {
+    fetch("https://blog.cansadadeserfeliz.com/reactjs-exercises/data/question-1.json", {
+      cache: 'no-cache', // *default, no-cache
+      headers: {
+        "Accept": "application/json"
+      }
+    })
+      .then(res => res.json())
+      .then(
+        (data) => {
+          console.log(data)
+          this.setState({
+            question: data,
+            error: null,
+          });
+        },
+        // Note: it's important to handle errors here
+        // instead of a catch() block so that we don't swallow
+        // exceptions from actual bugs in components.
+        (error) => {
+          this.setState({
+            question: null,
+            error: error.message,
+          });
+        }
+      )
+  }
+
+  componentDidMount() {
+    this.getQuestion();
   }
 
   onAnswerSelected(answerId) {
@@ -99,32 +133,40 @@ class QuizApp extends React.Component {
   }
 
   render() {
+    console.info('---render---')
     console.info(this.state)
+
+    if (this.state.error) {
+      return <div className="text-danger">{this.state.error}</div>
+    }
+
+    if (this.state.question === null) {
+      return <div>Loading...</div>
+    }
+
     return (
       <div>
-        <h1>Quiz</h1>
+        <h1 className="pb-2 border-bottom">Quiz</h1>
         <div className="d-flex my-2">
           <div className="flex-shrink-0">
             <img src={this.state.question.imageUrl} />
           </div>
           <div className="flex-grow-1 ms-3">
-            <div>{this.state.question.text}</div>
-            <div>{this.state.question.answers.map((answer) =>
-              <Answer answer={answer}
-                      questionsEnabled={this.state.questionsEnabled}
-                      onAnswerSelected={this.onAnswerSelected} key={answer.id} />)}</div>
+            <div className="p-3 mb-2 bg-light">{this.state.question.text}</div>
           </div>
         </div>
-        <Continue />
+        <div>{this.state.question.answers.map((answer) =>
+            <Answer answer={answer}
+                    questionsEnabled={this.state.questionsEnabled}
+                    onAnswerSelected={this.onAnswerSelected} key={answer.id} />)}</div>
+        <Continue questionsEnabled={this.state.questionsEnabled} />
       </div>
     );
   }
 }
 
-const element = <QuizApp />;
-
 // render a React element into a root DOM node
 ReactDOM.render(
-  element,
+  <QuizApp />,
   document.getElementById('root')
 );
