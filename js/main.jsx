@@ -63,10 +63,18 @@ const questions = [
 
 function Answer(props) {
   // TODO: change button colors
+  let btnStyle = 'btn-secondary'
+  if (!props.questionEnabled) {
+    if (props.answer.id != props.correctAnswerId) {
+      btnStyle = 'btn-danger'
+    } else {
+      btnStyle = 'btn-success'
+    }
+  }
   return (
     <div className="col-lg-4 col-md-6 col-sm-12 p-2">
-      <button className="btn btn-secondary"
-              disabled={!props.questionsEnabled}
+      <button className={"btn " + btnStyle}
+              disabled={!props.questionEnabled}
               onClick={() => {props.onAnswerSelected(props.answer.id)}}>{props.answer.text}</button>
     </div>
   );
@@ -75,7 +83,7 @@ function Answer(props) {
 function Continue(props) {
   return (
     <div>
-      <button disabled={props.questionsEnabled} className="btn btn-primary">Next</button>
+      <button disabled={props.questionEnabled} className="btn btn-primary">Next</button>
     </div>
   );
 }
@@ -89,7 +97,7 @@ class QuizApp extends React.Component {
       correctAnswersCount: 0,
       answersCount: 0,
       question: null,
-      questionsEnabled: true,
+      questionEnabled: true,
     };
   }
 
@@ -128,7 +136,7 @@ class QuizApp extends React.Component {
   onAnswerSelected(answerId) {
     this.setState((state, props) => ({
       answersCount: state.answersCount + 1,
-      questionsEnabled: false,
+      questionEnabled: false,
     }));
   }
 
@@ -157,9 +165,10 @@ class QuizApp extends React.Component {
         </div>
         <div class="d-flex flex-wrap align-content-between">{this.state.question.answers.map((answer) =>
             <Answer answer={answer}
-                    questionsEnabled={this.state.questionsEnabled}
+                    questionEnabled={this.state.questionEnabled}
+                    correctAnswerId={this.state.question.correctAnswerId}
                     onAnswerSelected={this.onAnswerSelected} key={answer.id} />)}</div>
-        <Continue questionsEnabled={this.state.questionsEnabled} />
+        <Continue questionEnabled={this.state.questionEnabled} />
       </div>
     );
   }
