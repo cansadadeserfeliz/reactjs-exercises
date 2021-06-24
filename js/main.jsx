@@ -44,7 +44,7 @@ class QuizApp extends React.Component {
 
   getQuestion() {
     console.info('---getQuestion---')
-    fetch('https://blog.cansadadeserfeliz.com/reactjs-exercises' + this.state.nextQuestionUrl, {
+    fetch('https://reactjs-exercises.cansadadeserfeliz.com' + this.state.nextQuestionUrl, {
       cache: 'no-cache', // *default, no-cache
       headers: {
         "Accept": "application/json"
