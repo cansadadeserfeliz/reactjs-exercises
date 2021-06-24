@@ -2,7 +2,7 @@ function Answer(props) {
   // TODO: change button colors
   let btnStyle = 'btn-secondary'
   if (!props.questionEnabled) {
-    if (props.answer.id != props.correctAnswerId) {
+    if (props.answer.id !== props.correctAnswerId) {
       btnStyle = 'btn-danger'
     } else {
       btnStyle = 'btn-success'
@@ -18,11 +18,12 @@ function Answer(props) {
 }
 
 function Continue(props) {
+  let text = props.nextQuestionExists ? 'Next' : 'Done';
   return (
     <div>
-      <button disabled={props.questionEnabled || !props.nexQuestionExists}
+      <button disabled={props.questionEnabled || !props.nextQuestionExists}
               onClick={props.nextEvent}
-              className="btn btn-primary">Next</button>
+              className="btn btn-primary">{text}</button>
     </div>
   );
 }
@@ -100,7 +101,11 @@ class QuizApp extends React.Component {
     return (
       <div>
         <h1 className="pb-2 border-bottom">Quiz</h1>
-        <p>{this.state.correctAnswersCount} / {this.state.answersCount}</p>
+        <p>
+          <span className="badge bg-success m-1">{this.state.correctAnswersCount}</span>
+          /
+          <span className="badge bg-dark m-1">{this.state.answersCount}</span>
+        </p>
         <div className="d-flex my-2">
           <div className="flex-shrink-0">
             <img src={this.state.question.imageUrl} />
@@ -114,7 +119,7 @@ class QuizApp extends React.Component {
                     questionEnabled={this.state.questionEnabled}
                     correctAnswerId={this.state.question.correctAnswerId}
                     onAnswerSelected={this.onAnswerSelected} key={answer.id} />)}</div>
-        <Continue nexQuestionExists={Boolean(this.state.nextQuestionUrl)} nextEvent={this.getQuestion} questionEnabled={this.state.questionEnabled} />
+        <Continue nextQuestionExists={Boolean(this.state.nextQuestionUrl)} nextEvent={this.getQuestion} questionEnabled={this.state.questionEnabled} />
       </div>
     );
   }
