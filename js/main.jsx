@@ -20,7 +20,7 @@ function Answer(props) {
 function Continue(props) {
   return (
     <div>
-      <button disabled={props.questionEnabled}
+      <button disabled={props.questionEnabled || !props.nexQuestionExists}
               onClick={props.nextEvent}
               className="btn btn-primary">Next</button>
     </div>
@@ -114,7 +114,7 @@ class QuizApp extends React.Component {
                     questionEnabled={this.state.questionEnabled}
                     correctAnswerId={this.state.question.correctAnswerId}
                     onAnswerSelected={this.onAnswerSelected} key={answer.id} />)}</div>
-        <Continue nextEvent={this.getQuestion} questionEnabled={this.state.questionEnabled} />
+        <Continue nexQuestionExists={Boolean(this.state.nextQuestionUrl)} nextEvent={this.getQuestion} questionEnabled={this.state.questionEnabled} />
       </div>
     );
   }
